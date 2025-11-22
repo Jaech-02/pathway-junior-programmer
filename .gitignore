@@ -1,0 +1,82 @@
+# Unity generado / Archivos compilados automaticamente
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+
+# Archivos de memoria y cache
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# Unity3D archivos generados
+ExportedObj/
+.consulo/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# Unity3D archivos de cache
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+
+# Unity3D archivos de usuario
+sysinfo.txt
+
+# Archivos de build
+Build/
+build/
+*.apk
+*.aab
+*.unitypackage
+
+# Archivos de sistema operativo
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# Visual Studio / Visual Studio Code
+.vs/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Archivos de proyecto generados
+*.slnx
+*.csproj
+*.csproj.user
+
+# Archivos de backup
+*.bak
+*.tmp
+*~
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
