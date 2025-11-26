@@ -4,17 +4,13 @@ using UnityEngine.InputSystem;
 public class moviento : MonoBehaviour
 {
     [Header("Velocidad")]
-    public float velocidad;
-    public float velocidadGiro;
-    
+    public float velocidad = 20f;
+
     [Header("Estabilidad")]
     public float alturaMinima = -10f;
     
     private Rigidbody rb;
-    private float inputMovimiento;
-    private float inputGiro;
     private Vector3 posicionInicial;
-    private Keyboard teclado;
 
     void Start()
     {
@@ -22,10 +18,8 @@ public class moviento : MonoBehaviour
         
         rb = GetComponent<Rigidbody>();
         
-        teclado = Keyboard.current;
-        
         rb.centerOfMass = new Vector3(0, -0.5f, 0);
-        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
         rb.mass = 1f;
         rb.linearDamping = 2f;
         rb.angularDamping = 3f;
@@ -33,34 +27,7 @@ public class moviento : MonoBehaviour
 
     void Update()
     {
-        if (teclado != null)
-        {
-            if (teclado.wKey.isPressed || teclado.upArrowKey.isPressed)
-            {
-                inputMovimiento = 1f;
-            }
-            else if (teclado.sKey.isPressed || teclado.downArrowKey.isPressed)
-            {
-                inputMovimiento = -1f;
-            }
-            else
-            {
-                inputMovimiento = 0f;
-            }
-            
-            if (teclado.aKey.isPressed || teclado.leftArrowKey.isPressed)
-            {
-                inputGiro = -1f;
-            }
-            else if (teclado.dKey.isPressed || teclado.rightArrowKey.isPressed)
-            {
-                inputGiro = 1f;
-            }
-            else
-            {
-                inputGiro = 0f;
-            }
-        }
+        transform.Translate(Vector3.forward * Time.deltaTime * velocidad);
         
         if (transform.position.y < alturaMinima)
         {
@@ -75,14 +42,5 @@ public class moviento : MonoBehaviour
         
         transform.position = new Vector3(posicionInicial.x, 1f, posicionInicial.z);
         transform.rotation = Quaternion.identity;
-    }
-
-    void FixedUpdate()
-    {
-        Vector3 movimiento = transform.forward * inputMovimiento * velocidad;
-        rb.AddForce(movimiento, ForceMode.VelocityChange);
-        
-        float giro = inputGiro * velocidadGiro * Time.fixedDeltaTime;
-        transform.Rotate(0, giro, 0);
     }
 }

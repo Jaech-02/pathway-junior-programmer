@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4294012234437533064}
   - component: {fileID: 1635175424878105263}
   - component: {fileID: 3022511849704320744}
+  - component: {fileID: 2754225524772036929}
   m_Layer: 0
   m_Name: Obstaculo
   m_TagString: Untagged
@@ -29,8 +30,8 @@ Transform:
   m_GameObject: {fileID: 4661814633390695450}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 14.7}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalPosition: {x: 0, y: 1.24, z: 14.7}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -126,9 +127,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::cuboObstaculo
   velocidadRotacion: 90
   tagVehiculo: Player
-  efectoParticulas: {fileID: 6885842463310662046, guid: ea08d27cd42e3e24794f423619df7b85, type: 3}
+  efectoParticulas: {fileID: 0}
   sonidoColision: {fileID: 8300000, guid: 7246a3cdc5b44b3469456972bfb7ef19, type: 3}
   volumenSonido: 1
   tiempoDestruccion: 0.1
   tiempoVidaParticulas: 2
   colorParticulas: {r: 1, g: 0.8283272, b: 0, a: 1}
+  tiempoCambioATrigger: 0.5
+  fuerzaImpulso: 6
+  impulsoVertical: 3
+  fuerzaTorque: 10
+--- !u!54 &2754225524772036929
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4661814633390695450}
+  serializedVersion: 5
+  m_Mass: 0.5
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0

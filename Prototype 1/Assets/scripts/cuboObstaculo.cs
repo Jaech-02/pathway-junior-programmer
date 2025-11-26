@@ -1,50 +1,63 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody), typeof(Collider))]
 public class cuboObstaculo : MonoBehaviour
 {
-    [Header("Rotacion")]
-    public float velocidadRotacion = 90f; 
-    
     [Header("Colision")]
     public string tagVehiculo = "Player";
-    
+
     [Header("Efectos")]
-    public GameObject efectoParticulas;
     public AudioClip sonidoColision;
     [Range(0f, 1f)]
     public float volumenSonido = 1f;
-    public float tiempoDestruccion = 0.1f;
-    public float tiempoVidaParticulas = 2f;
-    public Color colorParticulas = Color.yellow;
+
+    [Header("Rebote")]
+    public float fuerzaImpulso = 2f;
+    public float impulsoVertical = 0.3f;
+    public float fuerzaTorque = 5f;
 
     void Start()
     {
         Collider col = GetComponent<Collider>();
         if (col != null)
         {
-            col.isTrigger = true;
+            col.isTrigger = false;
         }
-    }
 
-    void Update()
-    {
-        transform.Rotate(0, velocidadRotacion * Time.deltaTime, 0);
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (!string.IsNullOrEmpty(tagVehiculo) && other.CompareTag(tagVehiculo))
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb != null)
         {
-            DestruirObstaculo();
-        }
-        else if (other.GetComponent<moviento>() != null)
-        {
-            DestruirObstaculo();
+            rb.isKinematic = false;
         }
     }
 
-    void DestruirObstaculo()
+    void OnCollisionEnter(Collision collision)
     {
+        if (!string.IsNullOrEmpty(tagVehiculo) && collision.collider.CompareTag(tagVehiculo) == false &&
+            collision.collider.GetComponent<moviento>() == null)
+        {
+            return;
+        }
+
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            Vector3 velRelativa = collision.relativeVelocity;
+            velRelativa.y = 0f;
+            Vector3 direccion = -velRelativa.normalized;
+
+            Vector3 impulso = direccion * fuerzaImpulso + Vector3.up * impulsoVertical;
+            rb.AddForce(impulso, ForceMode.Impulse);
+
+            Vector3 puntoContacto = collision.contacts[0].point - rb.worldCenterOfMass;
+            Vector3 ejeTorque = Vector3.Cross(puntoContacto.normalized, Vector3.up);
+            if (ejeTorque.sqrMagnitude < 0.001f)
+            {
+                ejeTorque = Vector3.right;
+            }
+            rb.AddTorque(ejeTorque.normalized * fuerzaTorque, ForceMode.Impulse);
+        }
+
         if (sonidoColision != null)
         {
             GameObject audioObj = new GameObject("AudioTemp_" + sonidoColision.name);
@@ -56,78 +69,9 @@ public class cuboObstaculo : MonoBehaviour
             audioSource.spatialBlend = 0f;
             audioSource.playOnAwake = false;
             audioSource.loop = false;
-            audioSource.priority = 128;
-            audioSource.pitch = 1f;
             
             audioSource.Play();
-            
-            Destroy(audioObj, sonidoColision.length + 0.1f);
-            
-            Debug.Log("Sonido reproducido: " + sonidoColision.name + " (Volumen: " + volumenSonido + ")");
+            Object.Destroy(audioObj, sonidoColision.length + 0.1f);
         }
-        else
-        {
-            Debug.LogWarning("Sonido de colision no asignado en " + gameObject.name);
-        }
-        
-        if (efectoParticulas != null)
-        {
-            GameObject particulasInstancia = Instantiate(efectoParticulas, transform.position, Quaternion.identity);
-            
-            ParticleSystem[] sistemasParticulas = particulasInstancia.GetComponentsInChildren<ParticleSystem>();
-            
-            foreach (ParticleSystem ps in sistemasParticulas)
-            {
-                if (ps != null)
-                {
-                    var main = ps.main;
-                    main.startColor = colorParticulas;
-                    
-                    var renderer = ps.GetComponent<Renderer>();
-                    if (renderer != null && renderer.material != null)
-                    {
-                        Material mat = new Material(renderer.material);
-                        mat.color = colorParticulas;
-                        mat.SetColor("_TintColor", colorParticulas);
-                        renderer.material = mat;
-                    }
-                    
-                    ps.Play();
-                }
-            }
-            
-            if (sistemasParticulas.Length == 0)
-            {
-                ParticleSystem ps = particulasInstancia.GetComponent<ParticleSystem>();
-                if (ps != null)
-                {
-                    var main = ps.main;
-                    main.startColor = colorParticulas;
-                    
-                    var renderer = ps.GetComponent<Renderer>();
-                    if (renderer != null && renderer.material != null)
-                    {
-                        Material mat = new Material(renderer.material);
-                        mat.color = colorParticulas;
-                        mat.SetColor("_TintColor", colorParticulas);
-                        renderer.material = mat;
-                    }
-                    
-                    ps.Play();
-                }
-            }
-            
-            Destroy(particulasInstancia, tiempoVidaParticulas);
-        }
-        
-        GetComponent<Renderer>().enabled = false;
-        Collider col = GetComponent<Collider>();
-        if (col != null)
-        {
-            col.enabled = false;
-        }
-        
-        Destroy(gameObject, tiempoDestruccion);
     }
 }
-
